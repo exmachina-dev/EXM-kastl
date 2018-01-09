@@ -2,7 +2,7 @@
 
 import pytest
 
-from ertza.drivers import DriverFrontend
+from kastl.drivers import DriverFrontend
 
 
 class Test_DriverFrontend(object):

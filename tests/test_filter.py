@@ -13,8 +13,8 @@
 import pytest
 from functools import partial
 
-from ertza.motion.filters import Filter
-from ertza.processors.osc.message import OscMessage, OscAddress
+from kastl.motion.filters import Filter
+from kastl.processors.osc.message import OscMessage, OscAddress
 
 
 class Test_Filter(object):

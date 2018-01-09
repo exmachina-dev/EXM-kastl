@@ -4,7 +4,7 @@ import pytest
 
 import os
 
-from ertza.configparser import ConfigParser, NoSectionError, NoOptionError
+from kastl.configparser import ConfigParser, NoSectionError, NoOptionError
 
 
 class Test_ConfigParser(object):

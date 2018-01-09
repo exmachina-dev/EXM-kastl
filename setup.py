@@ -13,14 +13,14 @@ def file_content(filename):
     return codecs.open(filename, 'r', 'utf-8').read()
 
 setup(
-    name='ertza_motion',
+    name='kastl',
     version=__version__,
     packages = find_packages(),
-    description="Motion server software by ExMachina SAS.",
+    description="Kastl motion server software by ExMachina SAS.",
     long_description=file_content('README.md'),
     author="Benoit Rapidel, ExMachina SAS",
     author_email="benoit.rapidel+devs@exmachina.fr",
-    url="http://github.org/exmachina-dev/ertza.git",
+    url="http://github.org/exmachina-dev/EXM-kastl.git",
     package_data={'': ['LICENSE']},
     include_package_data=True,
     install_requires=[],
@@ -28,7 +28,7 @@ setup(
     platforms = ["Beaglebone"],
     entry_points = {
         'console_scripts': [
-            'ertza_motion = ertza_motion.ertza:main'
+            'kastl = kastl.kastl:main'
         ]
     },
     classifiers=(
