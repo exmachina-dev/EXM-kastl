@@ -298,7 +298,7 @@ class OscMachine(AbstractMachine):
 
                 future = self.find_matching_future(msg)
                 if future is None:
-                    logging.info('No future for %s' % str(msg))
+                    logging.debug('No future for %s' % str(msg))
                     # A command might be sent from the remote node (error,
                     # event, etc)
                     # TODO: Here should be a function to handle this case
