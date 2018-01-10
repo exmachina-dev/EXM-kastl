@@ -78,7 +78,8 @@ class MotionUnit(object):
         self.discover_nodes()
 
         # Add a serial remote
-        self.register_remote(RemoteType.Varmo)
+        if not self.config.get('serial', 'disable', fallback=False):
+            self.register_remote(RemoteType.Varmo)
 
     def stop(self):
         "Stop all machines and motion server"
