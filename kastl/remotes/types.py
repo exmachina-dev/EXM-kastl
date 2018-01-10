@@ -17,4 +17,4 @@ from enum import Enum, unique
 class RemoteType(Enum):
     NONE = ''
     Varmo = 'SerialVarmo'
-    OscGui = 'OscGui'
+    Dario = 'OscDario'

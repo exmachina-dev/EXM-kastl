@@ -47,10 +47,11 @@ class OscServer(lo.Server):
 
     def send_message(self, message):
         osc_msg = message.to_message()
-        message.receiver.port = self.reply_port
+        if message.receiver.port is None:
+            message.receiver.port = self.reply_port
         if message.msg_type is not 'log':
             logging.debug("Sending to %s: %s" % (message.receiver, message))
-        self.send((message.receiver.hostname, self.reply_port), osc_msg)
+        self.send((message.receiver.hostname, message.receiver.port), osc_msg)
 
     @lo.make_method(None, None)
     def dispatch(self, path, args, types, sender):

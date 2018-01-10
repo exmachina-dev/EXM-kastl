@@ -14,7 +14,7 @@ from .exceptions import RemoteError, FatalRemoteError, RemoteTimeoutError
 from .types import RemoteType
 
 from .abstract_remote import AbstractRemote
-from .osc_remotes import OscGuiRemote
+from .osc_remotes import OscDarioRemote
 from .serial_remotes import SerialVarmoRemote
 
 def get_remote_class(remote_type):

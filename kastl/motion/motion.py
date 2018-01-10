@@ -73,6 +73,8 @@ class MotionUnit(object):
                              target=self.update_alive_machines, args_length=2)
         self.register_filter(alias_mask='/alive', protocol='OSC', exclusive=True,
                              target=self.update_alive_units, args_length=3)
+        self.register_filter(alias_mask='/remote/connect', protocol='OSC', exclusive=True,
+                             target=self.connect_remote, args_length=1)
         self.discover_nodes()
 
         # Add a serial remote
@@ -155,10 +157,12 @@ class MotionUnit(object):
                 'cidr': nm,
                 'type': tp,
             }
-        if tp in REMOTE_TYPES:
+
+        try:
+            remote_type = RemoteType[tp]
             self.alive_remotes[(sn, ip,)] = unit
             logging.info('New remote %s found at %s.', sn, ip)
-        else:
+        except KeyError:
             self.alive_machines[(sn, ip,)] = unit
             logging.info('New machine %s found at %s.', sn, ip)
 
@@ -216,6 +220,8 @@ class MotionUnit(object):
     def register_remote(self, remote_type, sn=None, ip=None):
         asn, aip = None, None
 
+        remote_config = dict()
+
         if sn is not None or ip is not None:
             alive_keys = list(self.alive_remotes.keys())
 
@@ -236,7 +242,7 @@ class MotionUnit(object):
                 i = ipi
             else:
                 i = sni
-            m = self.alive_machines[alive_keys[i]]
+            remote_config = self.alive_remotes[alive_keys[i]]
 
             asn, aip = alive_keys[i]
 
@@ -245,13 +251,15 @@ class MotionUnit(object):
             'serialnumber': asn,
         }
 
+        remote_config.update(config)
+
         remote_class = get_remote_class(remote_type)
         if not remote_class:
             logging.error('No remote for %s', str(remote_type))
             return
 
-        remote = remote_class(**config)
-        print(remote.__class__.__name__)
+        remote = remote_class(**remote_config)
+
         # Redirect all trafic from this machine to its Machine
         if remote.HAS_IP:
             self.register_filter(sender=aip, target=remote.handle, exclusive=True)
@@ -262,6 +270,20 @@ class MotionUnit(object):
 
         remote.local_status = self.local_status     # Connect remote local status to local status
         remote.start()
+        logging.debug('Registered %s', repr(remote))
+        return remote
+
+    def connect_remote(self, m):
+        try:
+            tp = RemoteType[m.args[0]]
+            ip = m.sender.hostname
+            print(tp, ip)
+        except KeyError:
+            logging.error('Unknow remote type %s.', m.args[0])
+            return
+
+        r = self.register_remote(tp, ip=ip)
+        r.handle(m)
 
     def reply(self, command):
         if command.answer is not None:

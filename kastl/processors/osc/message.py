@@ -26,17 +26,12 @@ class OscAddress(object):
         if address_object:
             self.hostname = copy(address_object.hostname)
             self.port = int(copy(address_object.port))
-
-            del(address_object)
-        elif 'hostname' in kwargs:
-            self.hostname = kwargs['hostname']
-
-            if 'port' in kwargs:
-                self.port = kwargs['port']
-            else:
-                self.port = 6970
         else:
-            raise AttributeError('Missing arguments for creation.')
+            try:
+                self.hostname = kwargs.get('hostname')
+                self.port = kwargs.get('port', 6970) # FIXME: We need to make this configurable
+            except KeyError as e:
+                raise AttributeError('Missing requiret argument: %s' % (e))
 
     def __repr__(self):
         return "%s:%d" % (self.hostname, self.port)
