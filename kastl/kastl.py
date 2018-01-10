@@ -73,6 +73,10 @@ class Kastl(object):
                                       custom_conf,
                                       **kwargs)
 
+        if len(self.mu.config.config_files) == 0:
+            logger.error('No config file found, exiting.')
+            sys.exit(1)
+
         if not os.path.isfile(self.mu.config.config_files[0]):
             logger.error('%s does not exist, exiting.', self.mu.config.config_files[0])
             sys.exit(1)
