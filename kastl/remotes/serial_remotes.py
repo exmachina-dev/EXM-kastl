@@ -31,7 +31,7 @@ class SerialRemote(AbstractRemote):
 
         self.local_status = dict()
 
-        # Order is miportant here because the handle will stop filtering in an
+        # Order is important here because the handle will stop filtering in an
         # exclusive filter accepts the message
         self.register_filter(protocol=self.PROTOCOL, target=self.timeout_reset)
         self.register_filter(protocol=self.PROTOCOL, target=self.handle_get,
@@ -43,7 +43,8 @@ class SerialRemote(AbstractRemote):
 
     def main_loop(self, *args, **kwargs):
         while not self.running_ev.is_set():
-            self.running_ev.wait(self.INTERVAL)
+            # Here we should send feedback data when requested
+            self.running_ev.wait(self.FEEDBACK_INTERVAL)
 
     def handle_get(self, m):
         k = m.args[0].decode()
@@ -78,29 +79,6 @@ class SerialRemote(AbstractRemote):
                 print(k, a)
         except Exception as e:
             logging.exception(e)
-
-    def timeout_reset(self, m):
-        self._last_message_time = time.time()
-
-    def reply_ok(self, msg, *args, **kwargs):
-        self.reply(msg, *args, add_path='ok', **kwargs)
-
-    def reply_error(self, msg, *args, **kwargs):
-        self.reply(msg, *args, add_path='error', **kwargs)
-
-    def reply(self, msg, *args, **kwargs):
-        ap = kwargs.pop('add_path', None)
-        if ap:
-            if not isinstance(ap, str):
-                raise TypeError('add_path kwarg must be a string')
-
-            full_path = msg.command + ap \
-                if ap.startswith(msg.SEP) \
-                else '{0.command}{0.SEP}{1}'.format(msg, ap)
-        else:
-            full_path = self.command
-
-        self.send(full_path, *args, **kwargs)
 
     def send(self, *args, **kwargs):
         msg = kwargs['msg'] if 'msg' in kwargs else \
