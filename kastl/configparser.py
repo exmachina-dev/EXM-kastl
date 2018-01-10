@@ -14,37 +14,38 @@ logger = logging.getLogger('kastl.config')
 _VARIANT_PATH = "/etc/kastl/variants"
 _PROFILE_PATH = "/etc/kastl/profiles"
 _PROFILE_OPTIONS = {
-    'machine': {
+    'server': {
         'ip_address': ('str', None),
-        'operating_mode': ('str', None),
     },
-    'motor': {
-        'acceleration': ('float', 'm.s-1'),
-        'deceleration': ('float', 'm.s-1'),
+    'motion': {
         'control_mode': ('int', None),
+        'invert': ('bool', None),
 
         'entq_kp': ('float', None),
-
         'entq_kp_vel': ('float', None),
         'entq_ki': ('float', None),
         'entq_kd': ('float', None),
+
         'torque_rise_time': ('float', 'ms'),
         'torque_fall_time': ('float', 'ms'),
 
-        'application_coefficient': ('float', None),
+        'acceleration': ('float', 'm.s-1'),
+        'deceleration': ('float', 'm.s-1'),
+
+        'application_scale_factor': ('float', None),
         'application_velocity_unit': ('str', None),
         'application_position_unit': ('str', None),
+    },
+    'motion_limits': {
+        'max_velocity': ('float', None),
 
-        'invert': ('bool', None),
+        'max_acceleration': ('float', None),
+        'max_deceleration': ('float', None),
+        'max_position': ('float', None),
+        'min_position': ('float', None),
 
-        'acceleration_time_mode': ('bool', None),
-
-        'custom_max_velocity': ('float', None),
-
-        'custom_max_acceleration': ('float', None),
-        'custom_max_deceleration': ('float', None),
-        'custom_max_position': ('float', None),
-        'custom_min_position': ('float', None),
+        'min_torque_rise_time': ('float', 'ms'),
+        'min_torque_fall_time': ('float', 'ms'),
     }
 }
 
