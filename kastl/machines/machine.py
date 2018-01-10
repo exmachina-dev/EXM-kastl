@@ -201,15 +201,21 @@ class OscMachine(AbstractMachine):
 
     def update_local_status(self):
         self.request_machine_var('machine:error_code')
+        self.request_machine_var('machine:status')
 
         if self.control_mode == ControlMode.Velocity:
             self.request_machine_var('machine:velocity')
             self.request_machine_var('machine:acceleration')
             self.request_machine_var('machine:deceleration')
         elif self.control_mode == ControlMode.Torque:
-            pass
+            self.request_machine_var('machine:velocity')
+            self.request_machine_var('machine:torque_rise_time')
+            self.request_machine_var('machine:torque_fall_time')
         elif self.control_mode == ControlMode.Position:
-            pass
+            self.request_machine_var('machine:velocity')
+            self.request_machine_var('machine:position')
+            self.request_machine_var('machine:acceleration')
+            self.request_machine_var('machine:deceleration')
 
     def request_machine_var(self, var):
         f = self.send('/machine/get', var)
