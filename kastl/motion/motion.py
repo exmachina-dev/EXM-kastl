@@ -102,10 +102,14 @@ class MotionUnit(object):
 
         for f in self.target_filters:
             if f.accepts(msg):
-                f.handle(msg)
-                logging.debug('%s handled by %s', repr(msg), str(f))
-                if f.is_exclusive:
-                    return
+                try:
+                    f.handle(msg)
+                    logging.debug('%s handled by %s', repr(msg), str(f))
+                    if f.is_exclusive:
+                        return
+                except Exception as e:
+                    me = MotionError('Unexpected exception: ' + str(e), e)
+                    logging.exception(me)
 
         # p.execute(m)
 
